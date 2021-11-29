@@ -25,18 +25,105 @@ spool ./ueb5_concept.log
 -- ***************************************************************
 -- * Clear Database Section
 
-DROP TABLE PERSON;
-
+DROP TABLE KUENSTLER;
+DROP TABLE BENUTZER;
+DROP TABLE GENRE;
+DROP TABLE KUENSTLER_HAT_GENRE;
+DROP TABLE SONG_HAT_GENRE;
+DROP TABLE KUENSTLER_PLAYLIST;
+DROP TABLE KUENSTLER_PLAYLIST_HAT_SONGS;
+DROP TABLE BENUTZER_PLAYLIST;
+DROP TABLE BENUTZER_PLAYLIST_HAT_SONGS;
+DROP TABLE SONG;
+DROP TABLE BENUTZER_VERTRAG;
+DROP TABLE KUENSTLER_VERTRAG;
 
 -- ***************************************************************
 -- * Table Section
 
-CREATE TABLE PERSON(
-       Name VARCHAR2(50),
-       
+CREATE TABLE KUENSTLER(
+       id number(8),
+       Nachname VARCHAR2(50),
+       Vorname VARCHAR2(50),
+       Strasse VARCHAR2(50),
+       Hausnummer VARCHAR2(30),
+       PLZ VARCHAR2(10),
+       Land VARCHAR2(10),
+       Benutzername VARCHAR2(50),
+       Passwort VARCHAR2(50),
+       EMail VARCHAR2(50)
 );
 
+CREATE TABLE BENUTZER(
+       id number(8),
+       Nachname VARCHAR2(50),
+       Vorname VARCHAR2(50),
+       Strasse VARCHAR2(50),
+       Hausnummer VARCHAR2(30),
+       PLZ VARCHAR2(10),
+       Land VARCHAR2(10),
+       Benutzername VARCHAR2(50),
+       Passwort VARCHAR2(50),
+       EMail VARCHAR2(50),
+);
 
+CREATE TABLE GENRE(
+       id number(8),
+       Name VARCHAR2(50)
+);
+
+CREATE TABLE KUENSTLER_HAT_GENRE(
+       KUENSTLER_ID number(8),
+       GENRE_ID number(8)
+);
+
+CREATE TABLE SONG_HAT_GENRE(
+       SONG_ID number(8),
+       GENRE_ID number(8)
+);
+
+CREATE TABLE KUENSTLER_PLAYLIST(
+       id number(8),
+       Name VARCHAR2(50),
+       Album boolean
+);
+
+CREATE TABLE KUENSTLER_PLAYLIST_HAT_SONGS(
+       K_Playlist_ID number(8),
+       SONG_ID number(8)
+);
+
+CREATE TABLE BENUTZER_PLAYLIST(
+       id number(8),
+       Name VARCHAR2(50)
+);
+
+CREATE TABLE BENUTZER_PLAYLIST_HAT_SONGS(
+       B_Playlist_ID number(8),
+       SONG_ID number(8)
+);
+
+CREATE TABLE SONG(
+       id number(8),
+       Name VARCHAR2(50)
+);
+
+CREATE TABLE BENUTZER_VERTRAG(
+       id number(8),
+       Name VARCHAR2(50),
+       Bezeichnung VARCHAR2(50),
+       Preis number(3,2)
+);
+
+CREATE TABLE KUENSTLER_VERTRAG(
+       id number(8),
+       Name VARCHAR2(50),
+       Bezeichnung VARCHAR2(50),
+);
+
+CREATE TABLE KUENSTLER_HAT_VERTRAG(
+       
+);
 -- ***************************************************************
 -- * NOT NULL Constraint Section
 
