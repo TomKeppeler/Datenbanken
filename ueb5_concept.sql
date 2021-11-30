@@ -54,7 +54,7 @@ CREATE TABLE TAB_KUENSTLER(
        Passwort VARCHAR2(50),
        EMail VARCHAR2(50)
 );
-sql
+
 CREATE TABLE TAB_BENUTZER(
        BENUTZER_ID number(8),
        Nachname VARCHAR2(50),
