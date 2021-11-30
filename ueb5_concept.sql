@@ -69,7 +69,7 @@ CREATE TABLE BENUTZER(
 
 CREATE TABLE GENRE(
        id number(8),
-       Name VARCHAR2(50)
+       Bezeichnung VARCHAR2(50)
 );
 
 CREATE TABLE KUENSTLER_HAT_GENRE(
@@ -84,7 +84,7 @@ CREATE TABLE SONG_HAT_GENRE(
 
 CREATE TABLE KUENSTLER_PLAYLIST(
        id number(8),
-       Name VARCHAR2(50),
+       Bezeichnung VARCHAR2(50),
        Album boolean
 );
 
@@ -95,7 +95,7 @@ CREATE TABLE KUENSTLER_PLAYLIST_HAT_SONGS(
 
 CREATE TABLE BENUTZER_PLAYLIST(
        id number(8),
-       Name VARCHAR2(50)
+       Bezeichnung VARCHAR2(50)
 );
 
 CREATE TABLE BENUTZER_PLAYLIST_HAT_SONGS(
@@ -105,7 +105,7 @@ CREATE TABLE BENUTZER_PLAYLIST_HAT_SONGS(
 
 CREATE TABLE SONG(
        id number(8),
-       Name VARCHAR2(50)
+       Bezeichnung VARCHAR2(50)
 );
 
 CREATE TABLE BENUTZER_VERTRAG(
@@ -122,12 +122,13 @@ CREATE TABLE KUENSTLER_VERTRAG(
 );
 
 CREATE TABLE KUENSTLER_HAT_VERTRAG(
-       
+       KUENSTLER_VERTRAG_ID number(8),
+       KUENSTLER_ID number(8)
 );
 -- ***************************************************************
 -- * NOT NULL Constraint Section
 
-ALTER TABLE ...
+ALTER TABLE 
 
 -- ***************************************************************
 -- * Primary Key Constraint Section
