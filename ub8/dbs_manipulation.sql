@@ -56,23 +56,73 @@ spool ./dbs_manipulation.log
 --
 --      Aendern Sie die Hausnummer des Gebaeudes "A" in "66"
 
+UPDATE DBS_TAB_GEBAEUDE SET HAUS_NR = '66' WHERE GEBAEUDE LIKE 'A';
 
-
+SELECT * FROM DBS_TAB_GEBAEUDE dtg;
 --
 --      Erhoehen Sie das Gehalt aller Mitarbeiter um 3 Prozent
 --
+COMMIT;
+UPDATE DBS_TAB_MITARBEITER SET GEHALT = GEHALT + (GEHALT * (3/100));
 
-
+SELECT * FROM DBS_TAB_MITARBEITER;
 --
 --      Professor Becker wird neuer Dekan des Fachbereichs Informatik
 -- 
---      Frage: wie können Sie die zur Beantwortung dieser Änderung 
+--      Frage: wie kï¿½nnen Sie die zur Beantwortung dieser ï¿½nderung 
 --      erforderlichen beiden SQL-Befehle zu einem Befehl kombinieren?
 --
 
+
+FB_NR|FB_NAME                  |DEKAN     |
+-----+-------------------------+----------+
+3    |Elektrotechnik           |508311    |
+1    |Wirtschaftswissenschaften|508514    |
+2    |Informatik               |508321    |
+
+UPDATE DBS_TAB_FACHBEREICH SET DEKAN = (SELECT m.PERS_NR FROM DBS_TAB_PROFESSOR p, DBS_TAB_MITARBEITER m, DBS_TAB_HOCHSCHULANGEHOERIGER h 
+WHERE p.PERS_NR = m.PERS_NR AND m.HO_NR = h.HO_NR AND HO_NAME LIKE 'Becker')
+WHERE FB_NAME LIKE 'Informatik';
+
+SELECT * FROM DBS_TAB_FACHBEREICH;
+
+FB_NR|FB_NAME                  |DEKAN     |
+-----+-------------------------+----------+
+3    |Elektrotechnik           |508311    |
+1    |Wirtschaftswissenschaften|508514    |
+2    |Informatik               |508523    |
+
+SELECT m.PERS_NR, h.HO_NAME FROM DBS_TAB_PROFESSOR p, DBS_TAB_MITARBEITER m, DBS_TAB_HOCHSCHULANGEHOERIGER h 
+WHERE p.PERS_NR = m.PERS_NR AND m.HO_NR = h.HO_NR AND HO_NAME LIKE 'Becker';
+
+PERS_NR   |HO_NAME|
+----------+-------+
+508523    |Becker |
 --
---      Aendern Sie die Straßenangabe des Professors mit dem 
---      Fachgebiet "Statistik" in "Siegburger Straße 66" 
+--      Aendern Sie die Straï¿½enangabe des Professors mit dem 
+--      Fachgebiet "Statistik" in "Siegburger Straï¿½e 66" 
+
+SELECT p.PERS_NR, h.HO_NR, p.FACHGEBIET, h.HO_NAME, a.STRASSE 
+FROM DBS_TAB_PROFESSOR p, DBS_TAB_MITARBEITER m, 
+DBS_TAB_HOCHSCHULANGEHOERIGER h, DBS_TAB_ANSCHRIFT a 
+WHERE p.PERS_NR = m.PERS_NR AND m.HO_NR = h.HO_NR AND h.HO_NR = a.HO_NR AND p.PERS_NR = 509514
+
+PERS_NR   |HO_NR|FACHGEBIET|HO_NAME|STRASSE|
+----------+-----+----------+-------+-------+
+509514    | 1016|Statistik |Schmidt|Auerweg|
+
+UPDATE DBS_TAB_ANSCHRIFT SET STRASSE = 'Siegburger StraÃŸe 66'
+WHERE HO_NR = 1016;
+
+SELECT p.PERS_NR, h.HO_NR, p.FACHGEBIET, h.HO_NAME, a.STRASSE 
+FROM DBS_TAB_PROFESSOR p, DBS_TAB_MITARBEITER m, 
+DBS_TAB_HOCHSCHULANGEHOERIGER h, DBS_TAB_ANSCHRIFT a 
+WHERE p.PERS_NR = m.PERS_NR AND m.HO_NR = h.HO_NR AND h.HO_NR = a.HO_NR AND p.PERS_NR = 509514
+
+PERS_NR   |HO_NR|FACHGEBIET|HO_NAME|STRASSE             |
+----------+-----+----------+-------+--------------------+
+509514    | 1016|Statistik |Schmidt|Siegburger StraÃŸe 66|
+
 --
 --      Frage: Was muss beachtet werden, wenn Sie in der  
 --      SET-Anweisung mit Unteranfrage das "="-Zeichen werwenden?
@@ -80,9 +130,14 @@ spool ./dbs_manipulation.log
 
 
 
---		Alle Teilnehmer der letzten Prüfung in Datenbanksysteme
+--		Alle Teilnehmer der letzten Prï¿½fung in Datenbanksysteme
 --		erhalten eine Notenverbesserung um 10%.
 --		
+
+
+
+
+
 --      Frage: Worauf muss geachtet werden, wenn die lv_nr der
 --		Lehrveranstaltung ermittelt wird?
 --
@@ -93,7 +148,7 @@ spool ./dbs_manipulation.log
 --
 --      Fuegen Sie die folgenden Datensaetze ein:
 --
---      Erfassen Sie die neuen Gebäude "G" und "H", die in der Straße "Grantham-Allee",
+--      Erfassen Sie die neuen Gebï¿½ude "G" und "H", die in der Straï¿½e "Grantham-Allee",
 --      noch ohne Hausnummer, entstehen.
 --
 
@@ -107,11 +162,11 @@ spool ./dbs_manipulation.log
 --      Frage: Welchen Primaerschluesselwert erhaelt die 
 --      neue Lehrveranstaltung?
 --
---      Hinweis: Die nächste freie Schlüsselnummer erhält man 
---      mit „SELECT MAX(<attribut>)+1 FROM <tabelle>“. 
+--      Hinweis: Die nï¿½chste freie Schlï¿½sselnummer erhï¿½lt man 
+--      mit ï¿½SELECT MAX(<attribut>)+1 FROM <tabelle>ï¿½. 
 --
 --      Frage: In welchen Tabellen muss in welcher Reihenfolge 
---      eingefügt werden?
+--      eingefï¿½gt werden?
 --
 --      Frage: Wie lassen sich die Values direkt mit einem 
 --      SELECT-Befehl ermitteln und einfuegen?
@@ -123,17 +178,17 @@ spool ./dbs_manipulation.log
 --      berufen. Es handelt sich um die Professorin "Dr.  
 --      Roberta Maria Feinbein, 53113 Bonn, 
 --      Hauptstrasse 66". Sie wird mit einem monatlichen Gehalt 
---      von € 5.999 die Forschung und Lehre des Fachgebiets 
+--      von ï¿½ 5.999 die Forschung und Lehre des Fachgebiets 
 --      "Rechentechnik" vertreten. Ihre Heimatanschrift lautet 
 --      "Jahnwiese 19, 47051 Duisburg" 
 --
 --      Frage: In welchen Tabellen muss in welcher Reihenfolge 
---      eingefügt werden?
+--      eingefï¿½gt werden?
 -- 
 --      Frage: Wie lasen sich die neuen Primaerschluesselwerte 
---      ohne "Auto-Increment“ ermitteln?
+--      ohne "Auto-Incrementï¿½ ermitteln?
 -- 
---      Hinweis: Die nächste freie Schlüsselnummer erhaelt man 
+--      Hinweis: Die nï¿½chste freie Schlï¿½sselnummer erhaelt man 
 --      mit "SELECT MAX(<attribut>)+1 FROM <tabelle>". Leider 
 --      ist die Personalnummer als CHAR(10) kein Datentyp, auf 
 --      dem der "+"-Operator definiert ist. Da aber lediglich 
@@ -149,14 +204,14 @@ spool ./dbs_manipulation.log
 --
 --      Loeschen Sie die folgenden Datensaetze:
 --
---      Loeschen Sie oben eingefügte  Gebaeude "H", das von keiner 
+--      Loeschen Sie oben eingefï¿½gte  Gebaeude "H", das von keiner 
 --      Lehrveranstaltungen belegt wird.
 --
 
 --
 -- 		Der Studierende Leon Barsch, mit der Matr-Nr. 808603 hat sich 
---      von allen Prüfungen abgemeldet. Löschen sie die aktuellen 
---      Anmeldungen zu seinen Prüfungen.
+--      von allen Prï¿½fungen abgemeldet. Lï¿½schen sie die aktuellen 
+--      Anmeldungen zu seinen Prï¿½fungen.
 --
 --		Frage: Wie gehen Sie vor, wenn die Matr-Nr. nicht bekannt ist?
 
