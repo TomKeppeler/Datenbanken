@@ -339,7 +339,7 @@ DBS_TAB_HOCHSCHULANGEHOERIGER dth2, DBS_TAB_VORNAME dtv2
 --	Wie lautet die Menge der Personalnummer, die Professoren oder 
 --	Studenten gehoeren?
 --
- 
+
 --
 --	4.2	Schneiden von Tabellen
 --

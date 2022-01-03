@@ -287,8 +287,6 @@ PK_SONG_SONG_ID PRIMARY KEY (SONG_ID);
 -- ***************************************************************
 -- * Unique Key Constraint Section
 
-ALTER TABLE ...
-
 
 -- ***************************************************************
 -- * Foreign Key Constraint Section
@@ -325,7 +323,6 @@ FOREIGN KEY (KUENSTLER_PLAYLIST_ID) REFERENCES TAB_KUENSTLER_PLAYLIST (KUENSTLER
 ALTER TABLE TAB_KUENSTLER_PLAYLIST_HAT_SONGS ADD CONSTRAINT
 FK_KUENSTLER_PLAYLIST_HAT_SONGS_
 
-ALTER TABLE 
 
 -- ***************************************************************
 -- * SQL*plus Job Control Section
