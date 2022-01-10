@@ -133,15 +133,38 @@ PERS_NR   |HO_NR|FACHGEBIET|HO_NAME|STRASSE             |
 --		Alle Teilnehmer der letzten Pr�fung in Datenbanksysteme
 --		erhalten eine Notenverbesserung um 10%.
 --		
+SELECT * FROM DBS_TAB_PRUEFUNG;
 
+MATR_NR|LV_NR|PROFESSOR |VERSUCH|DATUM                  |NOTE|
+-------+-----+----------+-------+-----------------------+----+
+ 808602| 1144|508321    |      1|2021-06-17 00:00:00.000| 1.4|
+ 808602| 1152|508321    |      1|2021-06-07 00:00:00.000|   5|
+ 808602| 1152|508321    |      2|2021-06-19 00:00:00.000| 4.7|
+ 808603| 1153|508323    |      1|2022-03-13 00:00:00.000|    |
+ 808604| 1144|508321    |      1|2021-06-17 00:00:00.000| 2.2|
+ 808603| 1144|508321    |      1|                       |    |
+ 808603| 1152|508321    |      1|                       |    |
+ 
+UPDATE DBS_TAB_PRUEFUNG SET NOTE = NOTE - (Note * (10/100)) 
+WHERE MATR_NR IN (SELECT MATR_NR FROM DBS_TAB_STUDENT)
+AND LV_NR = (SELECT LV_NR FROM DBS_TAB_LEHRVERANSTALTUNG WHERE LV_NAME LIKE 'Datenbanksysteme');
+SELECT * FROM DBS_TAB_LEHRVERANSTALTUNG;
+SELECT * FROM DBS_TAB_DBS_TAB_LEHRVERANSTALTUNGPRUEFUNG;
 
-
-
-
+MATR_NR|LV_NR|PROFESSOR |VERSUCH|DATUM                  |NOTE|
+-------+-----+----------+-------+-----------------------+----+
+ 808602| 1144|508321    |      1|2021-06-17 00:00:00.000| 1.3|
+ 808602| 1152|508321    |      1|2021-06-07 00:00:00.000|   5|
+ 808602| 1152|508321    |      2|2021-06-19 00:00:00.000| 4.7|
+ 808603| 1153|508323    |      1|2022-03-13 00:00:00.000|    |
+ 808604| 1144|508321    |      1|2021-06-17 00:00:00.000|   2|
+ 808603| 1144|508321    |      1|                       |    |
+ 808603| 1152|508321    |      1|                       |    |
+ 
 --      Frage: Worauf muss geachtet werden, wenn die lv_nr der
 --		Lehrveranstaltung ermittelt wird?
 --
-
+auf LIKE oder so
 
 --
 --	2   Einfuegen neuer Datensaetze
@@ -152,7 +175,11 @@ PERS_NR   |HO_NR|FACHGEBIET|HO_NAME|STRASSE             |
 --      noch ohne Hausnummer, entstehen.
 --
 
+DELETE FROM DBS_TAB_GEBAEUDE WHERE GEBAEUDE LIKE 'G' OR GEBAEUDE LIKE 'H';
 
+INSERT INTO DBS_TAB_GEBAEUDE VALUES('G', 'Grantham-Allee', NULL);
+INSERT INTO DBS_TAB_GEBAEUDE VALUES('H', 'Grantham-Allee', NULL);
+SELECT * FROM DBS_TAB_GEBAEUDE dtg ;
 --
 --      Die neue Lehrveranstaltung "Objektrelationale Datenbanken" des 
 --      Fachbereichs Informatik soll jeden Mittwoch um 11:45 Uhr  
@@ -171,6 +198,60 @@ PERS_NR   |HO_NR|FACHGEBIET|HO_NAME|STRASSE             |
 --      Frage: Wie lassen sich die Values direkt mit einem 
 --      SELECT-Befehl ermitteln und einfuegen?
 
+DELETE FROM DBS_TAB_PROF_HAELT_LV WHERE LV_NR = (SELECT LV_NR FROM DBS_TAB_LEHRVERANSTALTUNG WHERE LV_NAME LIKE 'Objektrelationale Datenbanken');
+DELETE FROM DBS_TAB_LV_ORT WHERE LV_NR = (SELECT LV_NR FROM DBS_TAB_LEHRVERANSTALTUNG WHERE LV_NAME LIKE 'Objektrelationale Datenbanken');
+DELETE FROM DBS_TAB_LEHRVERANSTALTUNG WHERE LV_NAME LIKE 'Objektrelationale Datenbanken';
+
+SELECT * FROM DBS_TAB_LEHRVERANSTALTUNG;
+
+INSERT INTO DBS_TAB_LEHRVERANSTALTUNG(LV_NR, LV_NAME, FB_NR)
+SELECT (SELECT MAX(LV_NR)+1 FROM DBS_TAB_LEHRVERANSTALTUNG), 'Objektrelationale Datenbanken', (SELECT FB_NR FROM DBS_TAB_FACHBEREICH WHERE FB_NAME LIKE 'Informatik')
+FROM DUAL;
+
+INSERT INTO DBS_TAB_LV_ORT(LV_NR, TAG, ZEIT, GEBAEUDE, RAUM)
+SELECT (SELECT LV_NR FROM DBS_TAB_LEHRVERANSTALTUNG WHERE LV_NAME LIKE 'Objektrelationale Datenbanken'),
+'Mi', 1145, 'G', 321 FROM dual;
+
+SELECT * FROM DBS_TAB_LV_ORT;
+
+LV_NR|TAG|ZEIT |GEBAEUDE|RAUM |
+-----+---+-----+--------+-----+
+ 1144|Mo |1600 |F       |4    |
+ 1144|Mo |1745 |C       |181  |
+ 1150|Do |1230 |C       |177  |
+ 1150|Fr |1230 |C       |181  |
+ 1152|Fr |1600 |C       |181  |
+ 1152|Do |1230 |C       |016  |
+ 1152|Fr |1230 |        |     |
+ 1153|Di |1415 |C       |177  |
+ 1153|Do |1015 |C       |181  |
+ 1153|Do |1230 |C       |177  |
+ 1153|Do |1415 |C       |181  |
+ 1154|Di |0815 |E       |4    |
+ 1154|Di |1600 |F       |23   |
+ 1154|Di |1745 |C       |181  |
+ 1155|Mi |1145 |G       |321  |
+ 
+ INSERT INTO DBS_TAB_PROF_HAELT_LV(PERS_NR, LV_NR, TAG, ZEIT)
+ SELECT (SELECT p.PERS_NR FROM DBS_TAB_PROFESSOR p
+ 	JOIN DBS_TAB_MITARBEITER m ON p.PERS_NR = m.PERS_NR 
+ 	JOIN DBS_TAB_HOCHSCHULANGEHOERIGER h ON m.HO_NR = h.HO_NR 
+ 	WHERE h.HO_NAME LIKE 'Becker'), 
+ (SELECT LV_NR FROM DBS_TAB_LEHRVERANSTALTUNG WHERE LV_NAME LIKE 'Objektrelationale Datenbanken'),
+ TAG, ZEIT FROM DBS_TAB_LV_ORT 
+ WHERE LV_NR = (SELECT LV_NR FROM DBS_TAB_LEHRVERANSTALTUNG WHERE LV_NAME LIKE 'Objektrelationale Datenbanken');
+ 
+ 
+ 
+ SELECT * FROM DBS_TAB_PROF_HAELT_LV ORDER BY LV_NR DESC ;
+
+PERS_NR   |LV_NR|TAG|ZEIT |
+----------+-----+---+-----+
+508523    | 1155|Mi |1145 |
+508321    | 1154|Di |1600 |
+508523    | 1154|Di |0815 |
+508321    | 1154|Di |1745 |
+508523    | 1154|Di |1600 |
 
 
 --
@@ -198,7 +279,26 @@ PERS_NR   |HO_NR|FACHGEBIET|HO_NAME|STRASSE             |
 --      FROM <tabelle>"
 --
 
+INSERT INTO DBS_TAB_HOCHSCHULANGEHOERIGER(HO_NR, HO_NAME)
+SELECT 
+(SELECT MAX(HO_NR)+1 FROM DBS_TAB_HOCHSCHULANGEHOERIGER dth),
+'Feinbein' FROM dual;
 
+SELECT * FROM DBS_TAB_HOCHSCHULANGEHOERIGER ORDER BY HO_NR DESC;
+
+HO_NR|HO_NAME    |
+-----+-----------+
+ 1032|Feinbein   |
+ 1031|Feinbein   |
+ 1030|Jaguar     |
+ 1029|Iltis      |
+ 1028|Hahn       |
+ 1027|Ganz       |
+ 
+ SELECT * FROM DBS_TAB_VORNAME oder 
+BY HO_NR DESC;
+ 
+ 
 --  
 --      3    Loeschen von Datensaetzen
 --
