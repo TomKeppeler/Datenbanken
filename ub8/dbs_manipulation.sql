@@ -148,8 +148,6 @@ MATR_NR|LV_NR|PROFESSOR |VERSUCH|DATUM                  |NOTE|
 UPDATE DBS_TAB_PRUEFUNG SET NOTE = NOTE - (Note * (10/100)) 
 WHERE MATR_NR IN (SELECT MATR_NR FROM DBS_TAB_STUDENT)
 AND LV_NR = (SELECT LV_NR FROM DBS_TAB_LEHRVERANSTALTUNG WHERE LV_NAME LIKE 'Datenbanksysteme');
-SELECT * FROM DBS_TAB_LEHRVERANSTALTUNG;
-SELECT * FROM DBS_TAB_DBS_TAB_LEHRVERANSTALTUNGPRUEFUNG;
 
 MATR_NR|LV_NR|PROFESSOR |VERSUCH|DATUM                  |NOTE|
 -------+-----+----------+-------+-----------------------+----+
@@ -278,6 +276,9 @@ PERS_NR   |LV_NR|TAG|ZEIT |
 --      "SELECT to_char(MAX(to_number(<attribut>))+1) 
 --      FROM <tabelle>"
 --
+DELETE FROM DBS_TAB_HOCHSCHULANGEHOERIGER WHERE HO_NAME LIKE 'Feinbein';
+DELETE FROM DBS_TAB_VORNAME WHERE HO_NR IN (SELECT HO_NR FROM DBS_TAB_HOCHSCHULANGEHOERIGER WHERE HO_NAME LIKE 'Feinbein');
+DELETE FROM DBS_TAB_MITARBEITER WHERE HO_NR IN (SELECT HO_NR FROM DBS_TAB_HOCHSCHULANGEHOERIGER WHERE HO_NAME LIKE 'Feinbein');
 
 INSERT INTO DBS_TAB_HOCHSCHULANGEHOERIGER(HO_NR, HO_NAME)
 SELECT 
@@ -293,12 +294,93 @@ HO_NR|HO_NAME    |
  1030|Jaguar     |
  1029|Iltis      |
  1028|Hahn       |
- 1027|Ganz       |
+ 1027|Ganz       |Dr.
  
- SELECT * FROM DBS_TAB_VORNAME oder 
-BY HO_NR DESC;
+ SELECT * FROM DBS_TAB_VORNAME ORDER BY HO_NR DESC;
+ HO_NR|VO_NR|VORNAME |
+-----+-----+--------+
+ 1030|    2|Ella    |
+ 1030|    1|Julian  |
+ 1029|    1|David   |
+ 1028|    1|Noah    |
+ 1027|    1|Mila    |
  
+INSERT INTO DBS_TAB_VORNAME VALUES((SELECT HO_NR FROM DBS_TAB_HOCHSCHULANGEHOERIGER WHERE HO_NAME LIKE 'Feinbein'), 1, 'Roberta');
+INSERT INTO DBS_TAB_VORNAME VALUES((SELECT HO_NR FROM DBS_TAB_HOCHSCHULANGEHOERIGER WHERE HO_NAME LIKE 'Feinbein'), 2, 'Maria');
+
+SELECT * FROM DBS_TAB_VORNAME ORDER BY HO_NR DESC;
+HO_NR|VO_NR|VORNAME |
+-----+-----+--------+
+ 1031|    2|Maria   |
+ 1031|    1|Roberta |
+ 1030|    2|Ella    |
+ 1030|    1|Julian  |
  
+SELECT * FROM DBS_TAB_ANSCHRIFT ORDER BY HO_NR DESC;
+HO_NR|AN_NR|PLZ  |ORT           |STRASSE                 |HAUS_NR|
+-----+-----+-----+--------------+------------------------+-------+
+ 1030|    1|53111|Bonn          |Bertha-von-Suttner-Platz|       |
+ 1029|    1|53804|Much          |Hauptstra�e             |17     |
+ 1028|    1|53757|Sankt Augustin|Dornierstra�e           |       |
+ 1027|    1|53809|Ruppichteroth |Bahnhofstrasse          |3      |
+ 1026|    1|53639|K�nigswinter  |K�nigswinterer Stra�e   |55     |
+ 1025|    1|53347|Alfter        |Drosselweg              |12     |
+ 
+INSERT INTO DBS_TAB_ANSCHRIFT VALUES((SELECT HO_NR FROM DBS_TAB_HOCHSCHULANGEHOERIGER WHERE HO_NAME LIKE 'Feinbein'), 1,
+53113, 'Bonn', 'Hauptstrasse', '66');
+
+INSERT INTO DBS_TAB_ANSCHRIFT VALUES((SELECT HO_NR FROM DBS_TAB_HOCHSCHULANGEHOERIGER WHERE HO_NAME LIKE 'Feinbein'), 2,
+47051, 'Duisburg', 'Jahnwiese', '19');
+
+SELECT * FROM DBS_TAB_ANSCHRIFT ORDER BY HO_NR DESC;
+HO_NR|AN_NR|PLZ  |ORT           |STRASSE                 |HAUS_NR|
+-----+-----+-----+--------------+------------------------+-------+
+ 1031|    2|47051|Duisburg      |Jahnwiese               |19     |
+ 1031|    1|53113|Bonn          |Hauptstrasse            |66     |
+ 1030|    1|53111|Bonn          |Bertha-von-Suttner-Platz|       |
+ 1029|    1|53804|Much          |Hauptstra�e             |17     |
+
+INSERT INTO DBS_TAB_MITARBEITER VALUES(
+(SELECT MAX(PERS_NR)+1 FROM DBS_TAB_MITARBEITER), 
+(SELECT HO_NR FROM DBS_TAB_HOCHSCHULANGEHOERIGER WHERE HO_NAME LIKE 'Feinbein'),
+(SELECT FB_NR FROM DBS_TAB_FACHBEREICH WHERE FB_NAME LIKE 'Informatik'),
+'Forschung und Lehre',
+'Professor',
+5999,
+NULL
+);
+
+SELECT * FROM DBS_TAB_MITARBEITER ORDER BY HO_NR DESC;
+PERS_NR   |HO_NR|FB_NR|INSTITUTION        |BERUF                  |GEHALT|CHEF_NR   |
+----------+-----+-----+-------------------+-----------------------+------+----------+
+602223    | 1031|2    |Forschung und Lehre|Professor              |  5999|          |
+601414    | 1030|2    |Forschung und Lehre|studentische Hilfskraft|   412|508322    |
+602222    | 1025|3    |Forschung und Lehre|studentische Hilfskraft|   412|508322    |
+601313    | 1021|2    |Forschung und Lehre|studentische Hilfskraft|   412|508322    |
+509514    | 1016|1    |Forschung und Lehre|Professor              |5819.5|          |
+
+SELECT * FROM DBS_TAB_PROFESSOR;
+TITEL    |PERS_NR   |FACHGEBIET      |
+---------+----------+----------------+
+Prof. Dr.|508311    |Mathematik      |
+Prof. Dr.|508514    |Marketing       |
+Prof.    |508321    |Betriebssysteme |
+Prof. Dr.|508523    |Datenbanksysteme|
+Prof.    |508322    |Prammiersprachen|
+Prof. Dr.|509514    |Statistik       |
+
+INSERT INTO DBS_TAB_PROFESSOR VALUES('Dr.', (SELECT PERS_NR FROM DBS_TAB_MITARBEITER WHERE HO_NR = (
+SELECT HO_NR FROM DBS_TAB_HOCHSCHULANGEHOERIGER WHERE HO_NAME LIKE 'Feinbein')), 'Rechentechnik');
+
+SELECT * FROM DBS_TAB_PROFESSOR ORDER BY PERS_NR DESC;
+
+/*TITEL    |PERS_NR   |FACHGEBIET      |
+---------+----------+----------------+
+Dr.      |602223    |Rechentechnik   |
+Prof. Dr.|509514    |Statistik       |
+Prof. Dr.|508523    |Datenbanksysteme|
+Prof. Dr.|508514    |Marketing       |
+Prof.    |508322    |Prammiersprachen|*/
 --  
 --      3    Loeschen von Datensaetzen
 --
@@ -307,27 +389,65 @@ BY HO_NR DESC;
 --      Loeschen Sie oben eingef�gte  Gebaeude "H", das von keiner 
 --      Lehrveranstaltungen belegt wird.
 --
-
+DELETE FROM DBS_TAB_GEBAEUDE WHERE GEBAEUDE LIKE 'H';
 --
 -- 		Der Studierende Leon Barsch, mit der Matr-Nr. 808603 hat sich 
 --      von allen Pr�fungen abgemeldet. L�schen sie die aktuellen 
 --      Anmeldungen zu seinen Pr�fungen.
 --
 --		Frage: Wie gehen Sie vor, wenn die Matr-Nr. nicht bekannt ist?
-
-
+DELETE FROM DBS_TAB_PRUEFUNG p WHERE MATR_NR = (SELECT MATR_NR FROM DBS_TAB_STUDENT s
+JOIN DBS_TAB_HOCHSCHULANGEHOERIGER h ON s.HO_NR = h.HO_NR
+JOIN DBS_TAB_VORNAME v ON h.HO_NR = v.HO_NR
+WHERE v.VORNAME LIKE 'Leon' AND h.HO_NAME LIKE 'Barsch');
+SELECT * FROM DBS_TAB_PRUEFUNG; 
+/*MATR_NR|LV_NR|PROFESSOR |VERSUCH|DATUM                  |NOTE|
+-------+-----+----------+-------+-----------------------+----+
+ 808602| 1144|508321    |      1|2021-06-17 00:00:00.000| 1.3|
+ 808602| 1152|508321    |      1|2021-06-07 00:00:00.000|   5|
+ 808602| 1152|508321    |      2|2021-06-19 00:00:00.000| 4.7|
+ 808604| 1144|508321    |      1|2021-06-17 00:00:00.000|   2|*/
+ 
 --
 --      Der Professor mit der Personalnummer 508322 hat 
 --      gekuendigt.
 --
 --      Frage: In welchen Tabellen muss geloescht werden?
---
---      Frage: Warum ist nicht jede beliebige Loeschreihenfolge moeglich?
---
---      Frage: Wie koennen Sie sich die "ho_nr" merken, ohne sie zu wissen?
--- 
+--				anschrift -> vorname -> professor -> mitarbeiter -> hochschulangehoeriger
  
+--      Frage: Warum ist nicht jede beliebige Loeschreihenfolge moeglich?
+--				Wegen den verbindungen mit der Hochschulangehörigen tabelle bis zur Anschrift und Vorname
+--      Frage: Wie koennen Sie sich die "ho_nr" merken, ohne sie zu wissen?
+--				Wegen den verbindungen mit der Hochschulangehörigen tabelle bis zur Anschrift und Vorname
 
+DELETE FROM DBS_TAB_ANSCHRIFT a WHERE a.HO_NR = (
+SELECT h.HO_NR FROM DBS_TAB_HOCHSCHULANGEHOERIGER h
+JOIN DBS_TAB_MITARBEITER m ON h.HO_NR = m.HO_NR 
+ WHERE m.PERS_NR = 508322);
+
+DELETE FROM DBS_TAB_VORNAME v WHERE v.HO_NR = (
+SELECT h.HO_NR FROM DBS_TAB_HOCHSCHULANGEHOERIGER h
+ JOIN DBS_TAB_MITARBEITER m ON h.HO_NR = m.HO_NR 
+ WHERE m.PERS_NR = 508322);
+
+
+DELETE FROM DBS_TAB_PROFESSOR p WHERE p.PERS_NR = 508322;
+
+DELETE FROM DBS_TAB_MITARBEITER 
+ WHERE PERS_NR = 508322; 
+
+
+
+DELETE FROM DBS_TAB_HOCHSCHULANGEHOERIGER h WHERE h.HO_NR = (
+ SELECT m.HO_NR FROM DBS_TAB_MITARBEITER m 
+ WHERE m.PERS_NR = 508322);
+
+SELECT * FROM DBS_TAB_HOCHSCHULANGEHOERIGER m;
+
+SELECT m.HO_NR FROM DBS_TAB_MITARBEITER m 
+ WHERE m.PERS_NR = 508322;
+
+SELECT * FROM DBS_TAB_PROFESSOR dtp ;
 --
 --      Die Lehrveranstaltung "Statistik" ist gestrichen worden.
 --
