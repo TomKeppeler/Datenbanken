@@ -339,7 +339,9 @@ DBS_TAB_HOCHSCHULANGEHOERIGER dth2, DBS_TAB_VORNAME dtv2
 --	Wie lautet die Menge der Personalnummer, die Professoren oder 
 --	Studenten gehoeren?
 --
-
+SELECT PERS_NR FROM Student WHERE PERS_NR is not null
+UNION
+SELECT PERS_NR FROM Professor;
 --
 --	4.2	Schneiden von Tabellen
 --
