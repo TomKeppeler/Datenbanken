@@ -345,7 +345,7 @@ FB_NR|FB_NAME                  |DEKAN     |
 
 SELECT * FROM DBS_TAB_FACHBEREICH dtf ;
 --
---      Testen Sie den Einf�gevorgang in die zuvor erstellte View 
+--      Testen Sie den Einfügevorgang in die zuvor erstellte View 
 --      �Hochschulangehoeriger�
 --
 --      Frage: Warum ist ein Einf�gen hier grunds�tzlich nicht m�glich?
