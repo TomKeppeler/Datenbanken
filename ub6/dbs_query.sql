@@ -439,28 +439,42 @@ GROUP BY f.FB_NAME HAVING AVG(GEHALT) > 4000;
 --	Wie lauten die Namen der Studenten, die zeitlich spaeter 
 --	(mit groesserer ho_nr) als Meyer erfasst worden sind ?
 --
-  
+
+ SELECT h.HO_NAME, s.HO_NR FROM DBS_V_STUDENT s
+ JOIN DBS_TAB_HOCHSCHULANGEHOERIGER h ON s.HO_NR = h.HO_NR 
+ WHERE s.HO_NR > (SELECT HO_NR FROM DBS_TAB_HOCHSCHULANGEHOERIGER dth WHERE ho_name LIKE 'Meyer');
+ 
 --					
 --	6.3	Existenzabfragen
 --
 --	Welche Fachbereiche bieten keine Lehrveranstaltungen an?
 --
- 
+
+SELECT FB_NAME FROM DBS_TAB_FACHBEREICH 
+WHERE FB_NR NOT IN (SELECT FB_NR FROM DBS_TAB_LEHRVERANSTALTUNG);
+
 --
 --	Welche Professoren (Personalnummer) halten 
 --	Lehrveranstaltungen(mindestens eine)?
 --
- 
+
+SELECT DISTINCT PERS_NR FROM DBS_TAB_PROF_HAELT_LV 
+
 --
 --	6.4	All-Quantor
 --
 --	Welche Mitarbeiter erhalten das groesste Gehalt?
 --
- 
+ SELECT PERS_NR FROM DBS_TAB_MITARBEITER
+ WHERE GEHALT = (SELECT MAX(GEHALT) FROM DBS_TAB_MITARBEITER);
 --
 --	Welche Mitarbeiter verdienen weniger als andere?
 --
   
+SELECT PERS_NR, GEHALT FROM DBS_TAB_MITARBEITER dtm 
+WHERE GEHALT <> (SELECT MAX(GEHALT) FROM DBS_TAB_MITARBEITER)
+ORDER BY gehalt DESC;
+
 --
 -- Systemdatum
 --
