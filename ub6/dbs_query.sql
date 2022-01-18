@@ -5,7 +5,7 @@
 -- *                                                             *
 -- * <ChangeLogDate>             <ChangeLogText>                 *
 -- ***************************************************************
---
+--d
 -- ***************************************************************
 -- * Datenbanksysteme WS 2021/22
 -- * Uebungen 6, 7 
@@ -364,6 +364,8 @@ WHERE GEHALT > 4000;
 --	Student sind?
 --
 
+SELECT PERS_NR/*, h.HO_NAME */FROM DBS_TAB_MITARBEITER m, DBS_TAB_HOCHSCHULANGEHOERIGER h
+WHERE m.HO_NR =h.HO_NR;
 MINUS
 SELECT PERS_NR FROM DBS_TAB_MITARBEITER WHERE PERS_NR IS NOT NULL;
 --
@@ -374,11 +376,15 @@ SELECT PERS_NR FROM DBS_TAB_MITARBEITER WHERE PERS_NR IS NOT NULL;
 --	Wieviele Mitarbeiter werden beschaeftigt?
 --	
 
+SELECT COUNT(*) FROM DBS_TAB_MITARBEITER;
+
 --
 --	Wie lautet das hoechste, das niedrigste und das 
 --	durchschnittliche Gehalt sowie die Summe der Gehaelter der 
 --	Mitarbeiter?
 --
+
+SELECT MAX(GEHALT), MIN(GEHALT), AVG(GEHALT), SUM(GEHALT) FROM DBS_TAB_MITARBEITER;
 
 --
 --	5.2	Gruppierung von Verdichtungen
@@ -386,12 +392,18 @@ SELECT PERS_NR FROM DBS_TAB_MITARBEITER WHERE PERS_NR IS NOT NULL;
 --	Wie lauten die Durchschnittsgehaelter der Mitarbeiter 
 --	fuer jeden Fachbereiche?
 --
-
+SELECT AVG(GEHALT), f.FB_NAME  FROM DBS_TAB_MITARBEITER m
+JOIN DBS_TAB_FACHBEREICH f ON m.FB_NR = f.FB_NR
+GROUP BY f.FB_NAME;
 --
 --	Wie lauten die Durchschnittsgehaelter der Mitarbeiter 
---	fuer jeden Fachbereiche, wenn diese ueber 4.000 � liegen?
+--	fuer jeden Fachbereiche, wenn diese ueber 4.000 € liegen?
 --
  
+SELECT AVG(GEHALT), f.FB_NAME FROM DBS_TAB_MITARBEITER m
+JOIN DBS_TAB_FACHBEREICH f ON m.FB_NR = f.FB_NR
+GROUP BY f.FB_NAME HAVING AVG(GEHALT) > 4000;
+
 --
 --	6	Unterabfragen
 --
@@ -400,19 +412,24 @@ SELECT PERS_NR FROM DBS_TAB_MITARBEITER WHERE PERS_NR IS NOT NULL;
 --	Wie lauten die Namen der Mitarbeiter, die nicht in Bonn 
 --	wohnen?
 --
- 
+ SELECT HO_NAME FROM DBS_TAB_HOCHSCHULANGEHOERIGER h
+ WHERE h.HO_NR NOT IN (SELECT a.HO_NR FROM DBS_TAB_ANSCHRIFT a WHERE a.ORT LIKE 'Bonn');
 --
 --	... auch allgemeiner formulierbar als Join:
 --
- 
+ SELECT h.HO_NAME FROM DBS_TAB_HOCHSCHULANGEHOERIGER h
+ JOIN DBS_TAB_ANSCHRIFT a ON h.HO_NR = a.HO_NR
+ WHERE a.ORT NOT LIKE 'Bonn';
 --
 --	6.2	Vergleichsoperatoren
 --
 --	Welcher (!) Hochschulangehoerige wohnt im Auerweg?
 --	Achtung: warum "darf" bei "=" in dieser Anfrage nur eine  
 --	Person im Auerweg wohnen?
---
- 
+-- 
+ SELECT h.HO_NAME FROM DBS_TAB_HOCHSCHULANGEHOERIGER h
+ JOIN DBS_TAB_ANSCHRIFT a ON h.HO_NR = a.HO_NR
+ WHERE a.STRASSE LIKE 'Auerweg';
 --					
 --	... auch formulierbar als Join (hier d�rfen jedoch auch 
 --	mehrere Personen im Auerweg wohnen):
