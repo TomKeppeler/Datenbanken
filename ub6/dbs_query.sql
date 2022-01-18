@@ -19,6 +19,7 @@
 --
 -- Spaltenformatierung (nur fuer die Ausgabe)
 --
+/*
 column 	lv_name     format A35 WORD_WRAPPED
 column 	beruf       format A30 WORD_WRAPPED
 column 	fb_name     format A35 WORD_WRAPPED
@@ -35,7 +36,7 @@ column 	ho_name     format A20 WORD_WRAPPED
 --
 -- Protokolldatei
 --
-spool ./dbs_query.log
+spool ./dbs_query.log*/
 --
 -- Systemdatum
 --
