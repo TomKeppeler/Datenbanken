@@ -128,7 +128,7 @@ SELECT DISTINCT zeit FROM DBS_TAB_LV_ORT dtlo;
 --	Gehalt auszugeben.
 --
 
-SELECT pers_nr Personalnummer FROM DBS_TAB_MITARBEITER 
+SELECT pers_nr Personalnummer FROM DBS_TAB_MITARBEITER
 	ORDER BY gehalt DESC;
 
 --

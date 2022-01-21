@@ -286,7 +286,8 @@ PK_SONG_SONG_ID PRIMARY KEY (SONG_ID);
 
 -- ***************************************************************
 -- * Unique Key Constraint Section
-
+ALTER TABLE TAB_SONG ADD CONSTRAINT uk_song_bezeichnung
+UNIQUE (bezeichnung);
 
 -- ***************************************************************
 -- * Foreign Key Constraint Section
