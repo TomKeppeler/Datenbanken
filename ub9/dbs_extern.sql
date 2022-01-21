@@ -351,7 +351,7 @@ SELECT * FROM DBS_TAB_FACHBEREICH dtf ;
 --      Frage: Warum ist ein Einf�gen hier grunds�tzlich nicht m�glich?
 --	da z.B. die Mitarbeiter Tabelle auf Hochschulangehörige referenziert und deshalbe die view nicht das erfüllen kann.
 
-
+SELECT * FROM dbs_v_hochschulangehoeriger;
 
 --
 --      �nderung von Datens�tzen in Views
