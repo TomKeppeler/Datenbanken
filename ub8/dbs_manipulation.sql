@@ -50,7 +50,7 @@ spool ./dbs_manipulation.log
 -- * S Q L - B E I S P I E L M A N I P U L T I O N E N 
 --
 --  1   Aenderung von Datensaetzen
---
+-- 
 --      Aendern Sie die folgenden Datensaetze jeweils im Rahmen 
 --      eines einzelnen SQL-Befehls:
 --
