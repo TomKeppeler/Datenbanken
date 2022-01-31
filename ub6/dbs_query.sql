@@ -164,6 +164,9 @@ SELECT pers_Nr Personalnummer
 --	Es sollen die Nummern der Lehrveranstaltungen ausgegeben 
 --	werden, die im Gebaeude 'F' oder Freitags abgehalten werden.
 --
+
+
+
  
 SELECT LV_NR FROM DBS_TAB_LV_ORT 
 WHERE GEBAEUDE LIKE 'F' OR TAG LIKE 'Fr';
@@ -227,9 +230,8 @@ WHERE PERS_NR != 507263;
 --	Gebe eine Liste aller Fachbereichsnamen mit den Namen ihrer 
 --	zugehoerigen Lehrveranstaltungen aus.
 --
-
-SELECT fb_name, lv_name FROM DBS_TAB_FACHBEREICH dtf, DBS_TAB_LEHRVERANSTALTUNG dtl 
-WHERE dtf.FB_NR = dtl.FB_NR;
+SELECT fb_name, lv_name FROM DBS_TAB_FACHBEREICH f, DBS_TAB_LEHRVERANSTALTUNG l 
+WHERE f.FB_NR = l.FB_NR;
 
 --
 --	neue Syntax:
@@ -242,6 +244,16 @@ JOIN DBS_TAB_FACHBEREICH dtf ON dtl.FB_NR = dtf.FB_NR;
 --	In welchen unterschiedlichen Strassen finden am Freitag 
 --	Lehrveranstaltungen statt?
 --
+
+
+
+SELECT g.Strasse, lo.Tag, l.lv_name FROM DBS_TAB_LV_ORT lo
+INNER JOIN DBS_TAB_GEBAEUDE g ON lo.GEBAEUDE = g.GEBAEUDE
+INNER JOIN DBS_TAB_LEHRVERANSTALTUNG l ON lo.LV_NR = l.LV_NR 
+WHERE lo.tag LIKE 'Fr';
+
+
+
 
 SELECT DISTINCT strasse FROM DBS_TAB_LEHRVERANSTALTUNG dtl, DBS_TAB_LV_ORT dtlo, DBS_TAB_GEBAEUDE dtg
 WHERE dtl.LV_NR = dtlo.LV_NR AND dtlo.GEBAEUDE LIKE dtg.GEBAEUDE AND dtlo.tag LIKE 'Fr';
@@ -260,6 +272,12 @@ WHERE dtlo.tag LIKE 'Fr';
 --	sie eingeschrieben sind?
 --
 
+SELECT * FROM DBS_TAB_STUDENT dts 
+INNER JOIN DBS_TAB_MITARBEITER dtm ON dts.PERS_NR = dtm.PERS_NR
+WHERE dts.FB_NR <> dtm.FB_NR ;
+
+
+
 SELECT matr_nr FROM DBS_TAB_STUDENT dts, DBS_TAB_MITARBEITER dtm 
 WHERE dts.HO_NR = dtm.HO_NR AND dts.FB_NR != dtm.FB_NR;
 
@@ -275,7 +293,6 @@ WHERE dts.FB_NR != dtm.FB_NR;
 --	Wie lautet die Adresse des Professors des Fachgebiets 
 --	'Mathematik'?
 -- 	
-
 SELECT Strasse, haus_nr, plz, ort FROM DBS_TAB_ANSCHRIFT dta, DBS_TAB_PROFESSOR dtp, DBS_TAB_MITARBEITER dtm 
 WHERE dtp.PERS_NR = dtm.PERS_NR AND dtm.HO_NR = dta.HO_NR 
 AND dtp.FACHGEBIET LIKE 'Mathematik';
@@ -297,6 +314,15 @@ WHERE dtp.FACHGEBIET LIKE 'Mathematik';
 --
 --	spezielle Oracle Syntax (+):
 --
+
+SELECT matr_nr, institution FROM DBS_TAB_STUDENT s
+LEFT JOIN DBS_TAB_MITARBEITER m ON s.PERS_NR = m.PERS_NR 
+
+
+
+
+
+
 
 SELECT matr_nr, institution FROM DBS_TAB_STUDENT dts, DBS_TAB_MITARBEITER dtm 
 	WHERE dts.PERS_NR = dtm.PERS_NR
